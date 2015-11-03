@@ -44,19 +44,13 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
         other_services = [
             {
                 'name': 'nova-compute',
-                'location': 'lp:~openstack-charmers/charms/trusty/'
-                            'nova-compute/next',
                 'constraints': {'mem': '4G'},
             },
             {
                 'name': 'neutron-api',
-                'location': 'lp:~james-page/charms/trusty/neutron-api/'
-                            'subordinate-plugins',
             },
             {
                 'name': 'neutron-gateway',
-                'location': 'lp:~sdn-charmers/charms/trusty/neutron-gateway/'
-                            'ovs-odl',
             },
             {
                 'name': 'odl-controller',
@@ -66,8 +60,8 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
             },
             {
                 'name': 'neutron-api-odl',
-                'location': 'lp:~james-page/charms/trusty/neutron-api-odl/'
-                            'kilo-support',
+                'location': 'lp:~openstack-charmres/charms/trusty'
+                            '/neutron-api-odl/trunk',
             },
             {'name': 'mysql'},
             {'name': 'rabbitmq-server'},
