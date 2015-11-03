@@ -1,0 +1,8 @@
+#!/usr/bin/python
+"""Amulet tests on a basic cisco-vpp deployment on trusty-icehouse."""
+
+from basic_deployment import OVSODLBasicDeployment
+
+if __name__ == '__main__':
+    deployment = OVSODLBasicDeployment(series='trusty')
+    deployment.run_tests()

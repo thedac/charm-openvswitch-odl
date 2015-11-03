@@ -1,0 +1,19 @@
+name: openvswitch-odl
+subordinate: true
+maintainer: James Page <james.page@ubuntu.com>
+summary: "Open vSwitch OpenDayLight subordinate charm"
+description: TBC
+tags:
+  - openstack
+provides:
+  neutron-plugin:
+    interface: neutron-plugin
+    scope: container
+requires:
+  ovsdb-manager:
+    interface: ovsdb-manager
+  controller-api:
+    interface: odl-controller-api
+  container:
+    interface: juju-info
+    scope: container

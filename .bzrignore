@@ -1,0 +1,6 @@
+bin
+.settings
+.testrepository
+.tox
+*.pyc
+.git
