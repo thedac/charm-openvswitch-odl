@@ -140,7 +140,7 @@ class TestOVSODL(CharmUnitTestCase):
                                 ('libvirt_vif_driver',
                                  'nova.virt.libvirt.vif.'
                                  'LibvirtGenericVIFDriver'),
-                                ('security_group_api', 'nova'),
+                                ('security_group_api', 'neutron'),
                             ],
                         }
                     }

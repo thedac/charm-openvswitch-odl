@@ -78,7 +78,7 @@ def configure_neutron_plugin(neutron_plugin):
                             ('libvirt_vif_driver',
                              'nova.virt.libvirt.vif.'
                              'LibvirtGenericVIFDriver'),
-                            ('security_group_api', 'nova'),
+                            ('security_group_api', 'neutron'),
                         ],
                     }
                 }
