@@ -99,9 +99,9 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
             'neutron-api:identity-service': 'keystone:identity-service',
             'neutron-gateway:amqp': 'rabbitmq-server:amqp',
             'neutron-gateway:neutron-plugin-api':
-                'neutron-api:neutron-plugin-api',
+            'neutron-api:neutron-plugin-api',
             'neutron-gateway:quantum-network-service':
-                'nova-cloud-controller:quantum-network-service',
+            'nova-cloud-controller:quantum-network-service',
             'neutron-gateway:juju-info': 'openvswitch-odl:container',
         }
         super(OVSODLBasicDeployment, self)._add_relations(relations)
