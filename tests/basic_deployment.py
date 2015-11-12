@@ -60,7 +60,7 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
             },
             {
                 'name': 'neutron-api-odl',
-                'location': 'lp:~openstack-charmres/charms/trusty'
+                'location': 'lp:~openstack-charmers/charms/trusty'
                             '/neutron-api-odl/trunk',
             },
             {'name': 'mysql'},
