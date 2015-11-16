@@ -302,8 +302,8 @@ class PCIInfo(dict):
         return True
 
     def get_user_requested_config(self):
-        ''' Parse the user requested config str mac=<mac>;net=<net>;vlan=<vlan> and
-        return a dict'''
+        ''' Parse the user requested config str
+        mac=<mac>;net=<net>;vlan=<vlan> and return a dict'''
         mac_net_config = {}
         mac_map = config('mac-network-map')
         if mac_map:
