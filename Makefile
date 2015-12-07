@@ -1,16 +1,17 @@
 #!/usr/bin/make
 PYTHON := /usr/bin/env python
-TOX := /usr/bin/env tox
+CHARM_DIR := $(pwd)
+export CHARM_DIR
 
 lint:
 	@flake8 --exclude hooks/charmhelpers,tests/charmhelpers \
         hooks unit_tests tests
-	@$(TOX) -e lint
+	@charm proof
 
 test:
 	@# Bundletester expects unit tests here.
-	@echo Starting tests...
-	@$(TOX) -e py27-trusty
+	@echo Starting unit tests...
+	@$(PYTHON) /usr/bin/nosetests -v --nologcapture --with-coverage unit_tests
 
 functional_test:
 	@echo Starting Amulet tests...
