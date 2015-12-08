@@ -217,16 +217,18 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
                     msg="Missing bridge {} from gateway unit".format(bridge)
                 )
             cmd = 'ovs-vsctl get-controller {}'.format(bridge)
-            br_controller, _ = self.gateway_sentry.run(cmd)
-            br_controller = br_controller.strip()
-            if br_controller != controller_url:
+            br_controllers, _ = self.gateway_sentry.run(cmd)
+            # Beware of duplicate entries:
+            #    https://bugs.opendaylight.org/show_bug.cgi?id=960
+            br_controllers = list(set(br_controllers.split('\n')))
+            if len(br_controllers) != 1 or br_controllers[0] != controller_url:
                 status, _ = self.gateway_sentry.run('ovs-vsctl show')
                 amulet.raise_status(
                     amulet.FAIL,
                     msg="Controller configuration on bridge"
                         " {} incorrect: {} != {}\n"
                         "{}".format(bridge,
-                                    br_controller,
+                                    br_controllers,
                                     controller_url,
                                     status)
                 )

@@ -1,5 +1,7 @@
 #!/usr/bin/make
 PYTHON := /usr/bin/env python
+CHARM_DIR := $(pwd)
+export CHARM_DIR
 
 lint:
 	@flake8 --exclude hooks/charmhelpers,tests/charmhelpers \
@@ -8,7 +10,7 @@ lint:
 
 test:
 	@# Bundletester expects unit tests here.
-	@echo Starting tests...
+	@echo Starting unit tests...
 	@$(PYTHON) /usr/bin/nosetests -v --nologcapture --with-coverage unit_tests
 
 functional_test:
