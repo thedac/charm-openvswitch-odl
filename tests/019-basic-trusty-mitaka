@@ -5,6 +5,6 @@ from basic_deployment import OVSODLBasicDeployment
 
 if __name__ == '__main__':
     deployment = OVSODLBasicDeployment(series='trusty',
-                                       openstack='cloud:trusty-liberty',
-                                       source='cloud:trusty-updates/liberty')
+                                       openstack='cloud:trusty-mitaka',
+                                       source='cloud:trusty-updates/mitaka')
     deployment.run_tests()
