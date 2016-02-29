@@ -3,3 +3,4 @@ bin
 .testrepository
 .tox
 *.pyc
+*.sw[nop]
