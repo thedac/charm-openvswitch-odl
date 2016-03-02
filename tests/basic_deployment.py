@@ -54,14 +54,10 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
             },
             {
                 'name': 'odl-controller',
-                'location': 'lp:~sdn-charmers/charms/trusty/odl-controller/'
-                            'trunk',
                 'constraints': {'mem': '8G'},
             },
             {
                 'name': 'neutron-api-odl',
-                'location': 'lp:~openstack-charmers/charms/trusty'
-                            '/neutron-api-odl/trunk',
             },
             {'name': 'mysql'},
             {'name': 'rabbitmq-server'},
@@ -123,10 +119,8 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
         mysql = {
             'dataset-size': '50%',
         }
-        # TODO(jamespage): These need to be configurable in some way
         odl_controller = {
-            'install-url': 'http://10.245.161.162/swift/v1/opendaylight/'
-                           'distribution-karaf-0.2.3-Helium-SR3.tar.gz',
+            'install-url': os.environ.get('AMULET_ODL_LOCATION'),
             'http-proxy': os.environ.get('AMULET_HTTP_PROXY'),
             'https-proxy': os.environ.get('AMULET_HTTP_PROXY'),
         }
