@@ -132,7 +132,6 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
         }
         nova_cc = {
             'network-manager': 'Neutron',
-            'quantum-security-groups': 'yes',
         }
         configs = {
             'neutron-api': neutron_api,
