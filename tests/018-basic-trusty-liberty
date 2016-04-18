@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Amulet tests on a basic cisco-vpp deployment on trusty-icehouse."""
+"""Amulet tests on a basic openvswitch ODL deployment on trusty-liberty."""
 
 from basic_deployment import OVSODLBasicDeployment
 

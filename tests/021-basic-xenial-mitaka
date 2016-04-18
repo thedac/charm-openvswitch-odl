@@ -1,8 +1,9 @@
 #!/usr/bin/python
-"""Amulet tests on a basic cisco-vpp deployment on xenial-mitaka."""
+"""Amulet tests on a basic openvswitch ODL deployment on xenial-mitaka."""
 
 from basic_deployment import OVSODLBasicDeployment
 
 if __name__ == '__main__':
-    deployment = OVSODLBasicDeployment(series='xenial')
+    deployment = OVSODLBasicDeployment(series='xenial',
+                                       odl_version='beryllium')
     deployment.run_tests()

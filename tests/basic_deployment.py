@@ -17,16 +17,27 @@ from charmhelpers.contrib.openstack.amulet.utils import (
 u = OpenStackAmuletUtils(DEBUG)
 
 ODL_QUERY_PATH = '/restconf/operational/opendaylight-inventory:nodes/'
+ODL_PROFILES = {
+    'helium': {
+        'location': 'AMULET_ODL_LOCATION',
+        'profile': 'openvswitch-odl'
+    },
+    'beryllium': {
+        'location': 'AMULET_ODL_BE_LOCATION',
+        'profile': 'openvswitch-odl-beryllium'
+    },
+}
 
 
 class OVSODLBasicDeployment(OpenStackAmuletDeployment):
     """Amulet tests on a basic neutron-openvswtich deployment."""
 
     def __init__(self, series, openstack=None, source=None, git=False,
-                 stable=False):
+                 stable=False, odl_version='helium'):
         """Deploy the entire test environment."""
         super(OVSODLBasicDeployment, self).__init__(series, openstack,
                                                     source, stable)
+        self.odl_version = odl_version
         self._add_services()
         self._add_relations()
         self._configure_services()
@@ -105,12 +116,10 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
     def _configure_services(self):
         """Configure all of the services."""
         neutron_api = {
-            'manage-neutron-plugin-legacy-mode': False,
             'neutron-security-groups': False,
         }
         nova_compute = {
             'enable-live-migration': False,
-            'manage-neutron-plugin-legacy-mode': False,
         }
         keystone = {
             'admin-password': 'openstack',
@@ -119,11 +128,18 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
         mysql = {
             'dataset-size': '50%',
         }
-        odl_controller = {
-            'install-url': os.environ.get('AMULET_ODL_LOCATION'),
-            'http-proxy': os.environ.get('AMULET_HTTP_PROXY'),
-            'https-proxy': os.environ.get('AMULET_HTTP_PROXY'),
-        }
+        odl_controller = {}
+        if os.environ.get(ODL_PROFILES[self.odl_version]['location']):
+            odl_controller['install-url'] = \
+                os.environ.get(ODL_PROFILES[self.odl_version]['location'])
+        if os.environ.get('AMULET_HTTP_PROXY'):
+            odl_controller['http-proxy'] = \
+                os.environ['AMULET_HTTP_PROXY']
+        if os.environ.get('AMULET_HTTP_PROXY'):
+            odl_controller['https-proxy'] = \
+                os.environ['AMULET_HTTP_PROXY']
+        odl_controller['profile'] = \
+            ODL_PROFILES[self.odl_version]['profile']
         neutron_gateway = {
             'plugin': 'ovs-odl'
         }
@@ -176,19 +192,19 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
            service units."""
 
         commands = {
-            self.compute_sentry: ['status nova-compute',
-                                  'status openvswitch-switch'],
-            self.gateway_sentry: ['status openvswitch-switch',
-                                  'status neutron-dhcp-agent',
-                                  'status neutron-l3-agent',
-                                  'status neutron-metadata-agent',
-                                  'status neutron-metering-agent',
-                                  'status neutron-lbaas-agent',
-                                  'status nova-api-metadata'],
-            self.odl_controller_sentry: ['status odl-controller'],
+            self.compute_sentry: ['nova-compute',
+                                  'openvswitch-switch'],
+            self.gateway_sentry: ['openvswitch-switch',
+                                  'neutron-dhcp-agent',
+                                  'neutron-l3-agent',
+                                  'neutron-metadata-agent',
+                                  'neutron-metering-agent',
+                                  'neutron-lbaas-agent',
+                                  'nova-api-metadata'],
+            self.odl_controller_sentry: ['odl-controller'],
         }
 
-        ret = u.validate_services(commands)
+        ret = u.validate_services_by_name(commands)
         if ret:
             amulet.raise_status(amulet.FAIL, msg=ret)
 
@@ -199,11 +215,18 @@ class OVSODLBasicDeployment(OpenStackAmuletDeployment):
             'ovsdb-manager',
             'openvswitch-odl:ovsdb-manager'
         )['private-address']
-        controller_url = "tcp:{}:6633".format(odl_ip)
+        # NOTE: 6633 is legacy 6653 is IANA assigned
+        if self.odl_version == 'helium':
+            controller_url = "tcp:{}:6633".format(odl_ip)
+            check_bridges = ['br-int', 'br-ex', 'br-data']
+        else:
+            controller_url = "tcp:{}:6653".format(odl_ip)
+            # NOTE: later ODL releases only manage br-int
+            check_bridges = ['br-int']
         cmd = 'ovs-vsctl list-br'
         output, _ = self.gateway_sentry.run(cmd)
         bridges = output.split()
-        for bridge in ['br-int', 'br-ex', 'br-data']:
+        for bridge in check_bridges:
             if bridge not in bridges:
                 amulet.raise_status(
                     amulet.FAIL,
